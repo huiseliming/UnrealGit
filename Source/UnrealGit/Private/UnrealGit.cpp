@@ -7,12 +7,12 @@
 
 void FUnrealGitModule::StartupModule()
 {
-#if IS_RUN_GIT_COMMAND_ERROR
+#if RUN_GIT_COMMAND_HAS_ERROR
 #define LOG_VERBOSITY Error
 #else
 #define LOG_VERBOSITY Log
 #endif
-	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("IsRunGitCommandError : %s"), FGitMetadata::IsRunGitCommandError() ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("RunGitCommandHasError : %s"), FGitMetadata::RunGitCommandHasError() ? TEXT("True") : TEXT("False"));
 	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("IsDirty       : %s"), FGitMetadata::IsDirty() ? TEXT("True") : TEXT("False"));
 	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("AuthorName    : %s"), FGitMetadata::AuthorName());
 	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("AuthorEmail   : %s"), FGitMetadata::AuthorEmail());

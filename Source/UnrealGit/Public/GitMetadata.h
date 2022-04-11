@@ -8,7 +8,7 @@ public:
 	// code without revision history).
 	//static bool IsMetadataPopulated();
 	
-	static bool IsRunGitCommandError();
+	static bool RunGitCommandHasError();
 	
 	// Were there any uncommitted changes that won't be reflected
 	// in the CommitID?

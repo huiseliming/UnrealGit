@@ -17,7 +17,7 @@ public class UnrealGit : ModuleRules
 	{
 		get
 		{
-			return System.IO.Path.GetFullPath(System.IO.Path.Combine(ModuleDirectory, "../../"));
+			return System.IO.Path.GetFullPath(System.IO.Path.Combine(ModuleDirectory, "../../../../"));
 		}
 	}
 	
@@ -67,12 +67,13 @@ public class UnrealGit : ModuleRules
 			);
 		string gitCommand = "git";
 		Log.TraceInformation("->- Git Metadata Generate ->-");
-		bool IsRunGitCommandError = false;
+		bool RunGitCommandHasError = false;
 		char[] CharsToTrim = { '\r', '\n' };
 		Process process;
 		string output;
 		ProcessStartInfo startInfo = new ProcessStartInfo();
 		startInfo.RedirectStandardOutput = true;
+		Log.TraceInformation("WorkingProjectDir: " + ProjectDir);
 		startInfo.WorkingDirectory = ProjectDir;
 		startInfo.FileName = gitCommand;
 		
@@ -85,9 +86,14 @@ public class UnrealGit : ModuleRules
 			output = process.StandardOutput.ReadToEnd();
 			if (output.Length == 0)
 				GitIsDirty = false;
+			if (GitIsDirty)
+			{
+				Log.TraceInformation(" - DirtyFile Begin\n" + output);
+				Log.TraceInformation(" - DirtyFile End");
+			}
 		}
 		else
-			IsRunGitCommandError = true;
+			RunGitCommandHasError = true;
 		PrivateDefinitions.Add("GIT_IS_DIRTY=" + (GitIsDirty? "true" : "false"));
 		Log.TraceInformation("  GitIsDirty = " + (GitIsDirty? "true" : "false"));
 		GitCommandOutputInfo[] GitCommandArgumentsArray = new GitCommandOutputInfo[]
@@ -144,7 +150,7 @@ public class UnrealGit : ModuleRules
 			if (process.ExitCode == 0)
 				output = process.StandardOutput.ReadToEnd().Trim(CharsToTrim);
 			else
-				IsRunGitCommandError = true;
+				RunGitCommandHasError = true;
 			PrivateDefinitions.Add(GitCommandArgumentsArray[i].PreDefinitionsMacroName + "=TEXT(\"" + output + "\")");
 			Log.TraceInformation("  " + GitCommandArgumentsArray[i].PrintOutputName + " = " + output);
 		}
@@ -170,7 +176,7 @@ public class UnrealGit : ModuleRules
 			if (2 < VersionSplitNumbers.Length) GitVersionPatch = VersionSplitNumbers[2];
 		}
 		else
-			IsRunGitCommandError = true;
+			RunGitCommandHasError = true;
 		PrivateDefinitions.Add("GIT_TAG=TEXT(\"" + GitTag + "\")");
 		Log.TraceInformation("  GitTag = " + GitTag);
 
@@ -182,8 +188,9 @@ public class UnrealGit : ModuleRules
 		Log.TraceInformation("  GitVersionMajor = " + GitVersionMajor);
 		Log.TraceInformation("  GitVersionMinor = " + GitVersionMinor);
 		Log.TraceInformation("  GitVersionPatch = " + GitVersionPatch);
+		PrivateDefinitions.Add("RUN_GIT_COMMAND_HAS_ERROR=" + (RunGitCommandHasError ? "true" : "false"));
+		Log.TraceInformation("  RunGitCommandHasError=" + (RunGitCommandHasError ? "true" : "false"));
 		Log.TraceInformation("-<- Git Metadata Generate -<-");
-		PrivateDefinitions.Add("IS_RUN_GIT_COMMAND_ERROR=" + (IsRunGitCommandError ? "true" : "false"));
 		// Process.Start(gitCommand, gitCommitArgument);
 		// Process.Start(gitCommand, gitPushArgument);
 	}

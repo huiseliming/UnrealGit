@@ -6,9 +6,9 @@
 //	return true;
 //}
 
-bool FGitMetadata::IsRunGitCommandError()
+bool FGitMetadata::RunGitCommandHasError()
 {
-	return IS_RUN_GIT_COMMAND_ERROR;
+	return RUN_GIT_COMMAND_HAS_ERROR;
 }
 
 bool FGitMetadata::IsDirty()
