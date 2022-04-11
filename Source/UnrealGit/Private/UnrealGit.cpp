@@ -7,41 +7,26 @@
 
 void FUnrealGitModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	if (FGitMetadata::IsRunGitCommandError())
-	{
-		UE_LOG(LogTemp, Error, TEXT("IsRunGitCommandError : %s"), FGitMetadata::IsRunGitCommandError() ? TEXT("True") : TEXT("False"));
-		UE_LOG(LogTemp, Error, TEXT("IsDirty       : %s"), FGitMetadata::IsDirty() ? TEXT("True") : TEXT("False"));
-		UE_LOG(LogTemp, Error, TEXT("AuthorName    : %s"), FGitMetadata::AuthorName());
-		UE_LOG(LogTemp, Error, TEXT("AuthorEmail   : %s"), FGitMetadata::AuthorEmail());
-		UE_LOG(LogTemp, Error, TEXT("CommitSHA1    : %s"), FGitMetadata::CommitSHA1());
-		UE_LOG(LogTemp, Error, TEXT("CommitDate    : %s"), FGitMetadata::CommitDate());
-		UE_LOG(LogTemp, Error, TEXT("CommitSubject : %s"), FGitMetadata::CommitSubject());
-		UE_LOG(LogTemp, Error, TEXT("CommitBody    : %s"), FGitMetadata::CommitBody());
-		UE_LOG(LogTemp, Error, TEXT("Describe      : %s"), FGitMetadata::Describe());
-		UE_LOG(LogTemp, Error, TEXT("Tag           : %s"), FGitMetadata::Tag());
-		UE_LOG(LogTemp, Error, TEXT("Version       : %s"), FGitMetadata::Version());
-		UE_LOG(LogTemp, Error, TEXT("VersionMajor  : %s"), FGitMetadata::VersionMajor());
-		UE_LOG(LogTemp, Error, TEXT("VersionMinor  : %s"), FGitMetadata::VersionMinor());
-		UE_LOG(LogTemp, Error, TEXT("VersionPatch  : %s"), FGitMetadata::VersionPatch());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("IsRunGitCommandError : %s"), FGitMetadata::IsRunGitCommandError() ? TEXT("True") : TEXT("False"));
-		UE_LOG(LogTemp, Log, TEXT("IsDirty       : %s"), FGitMetadata::IsDirty() ? TEXT("True") : TEXT("False"));
-		UE_LOG(LogTemp, Log, TEXT("AuthorName    : %s"), FGitMetadata::AuthorName());
-		UE_LOG(LogTemp, Log, TEXT("AuthorEmail   : %s"), FGitMetadata::AuthorEmail());
-		UE_LOG(LogTemp, Log, TEXT("CommitSHA1    : %s"), FGitMetadata::CommitSHA1());
-		UE_LOG(LogTemp, Log, TEXT("CommitDate    : %s"), FGitMetadata::CommitDate());
-		UE_LOG(LogTemp, Log, TEXT("CommitSubject : %s"), FGitMetadata::CommitSubject());
-		UE_LOG(LogTemp, Log, TEXT("CommitBody    : %s"), FGitMetadata::CommitBody());
-		UE_LOG(LogTemp, Log, TEXT("Describe      : %s"), FGitMetadata::Describe());
-		UE_LOG(LogTemp, Log, TEXT("Tag           : %s"), FGitMetadata::Tag());
-		UE_LOG(LogTemp, Log, TEXT("Version       : %s"), FGitMetadata::Version());
-		UE_LOG(LogTemp, Log, TEXT("VersionMajor  : %s"), FGitMetadata::VersionMajor());
-		UE_LOG(LogTemp, Log, TEXT("VersionMinor  : %s"), FGitMetadata::VersionMinor());
-		UE_LOG(LogTemp, Log, TEXT("VersionPatch  : %s"), FGitMetadata::VersionPatch());
-	}
+#if IS_RUN_GIT_COMMAND_ERROR
+#define LOG_VERBOSITY Error
+#else
+#define LOG_VERBOSITY Log
+#endif
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("IsRunGitCommandError : %s"), FGitMetadata::IsRunGitCommandError() ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("IsDirty       : %s"), FGitMetadata::IsDirty() ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("AuthorName    : %s"), FGitMetadata::AuthorName());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("AuthorEmail   : %s"), FGitMetadata::AuthorEmail());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("CommitSHA1    : %s"), FGitMetadata::CommitSHA1());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("CommitDate    : %s"), FGitMetadata::CommitDate());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("CommitSubject : %s"), FGitMetadata::CommitSubject());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("CommitBody    : %s"), FGitMetadata::CommitBody());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("Describe      : %s"), FGitMetadata::Describe());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("Tag           : %s"), FGitMetadata::Tag());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("Version       : %s"), FGitMetadata::Version());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("VersionMajor  : %s"), FGitMetadata::VersionMajor());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("VersionMinor  : %s"), FGitMetadata::VersionMinor());
+	UE_LOG(LogTemp, LOG_VERBOSITY, TEXT("VersionPatch  : %s"), FGitMetadata::VersionPatch());
+
 }
 
 void FUnrealGitModule::ShutdownModule()
