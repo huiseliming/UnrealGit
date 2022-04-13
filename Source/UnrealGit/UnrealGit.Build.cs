@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using System.Diagnostics;
+using System.Linq;
 using EpicGames.Core;
 using UnrealBuildTool;
 
@@ -165,15 +166,56 @@ public class UnrealGit : ModuleRules
 		if (process.ExitCode == 0)
 		{
 			GitTag = process.StandardOutput.ReadToEnd().Trim(CharsToTrim);
+			GitVersion = "";
+			GitVersionMajor = "";
+			GitVersionMinor = "";
+			GitVersionPatch = "";
 			// tag format must be "v[Major].[Minor].[Patch]" or "[Major].[Minor].[Patch]"
-			if (GitTag[0] == 'v')
-				GitVersion = GitTag.Substring(1);
-			else
-				GitVersion = GitTag;
-			string[] VersionSplitNumbers = GitVersion.Split('.');
-			if (0 < VersionSplitNumbers.Length) GitVersionMajor = VersionSplitNumbers[0];
-			if (1 < VersionSplitNumbers.Length) GitVersionMinor = VersionSplitNumbers[1];
-			if (2 < VersionSplitNumbers.Length) GitVersionPatch = VersionSplitNumbers[2];
+			int GitVersionCharIndex = 0;
+			if (GitTag.Length > 0 && GitTag[0] == 'v')
+			{
+				GitVersionCharIndex = 1;
+			}
+
+			for (; GitVersionCharIndex < GitTag.Length; GitVersionCharIndex++)
+			{
+				GitVersion += GitTag[GitVersionCharIndex];
+				if ( '9' >= GitTag[GitVersionCharIndex] && GitTag[GitVersionCharIndex] >= '0')
+				{
+					GitVersionMajor += GitTag[GitVersionCharIndex];
+				}
+				else
+				{
+					GitVersionCharIndex++;
+					break;
+				}
+			}
+			for (; GitVersionCharIndex < GitTag.Length; GitVersionCharIndex++)
+			{
+				GitVersion += GitTag[GitVersionCharIndex];
+				if ( '9' >= GitTag[GitVersionCharIndex] && GitTag[GitVersionCharIndex] >= '0')
+				{
+					GitVersionMinor += GitTag[GitVersionCharIndex];
+				}
+				else
+				{
+					GitVersionCharIndex++;
+					break;
+				}
+			}
+			for (; GitVersionCharIndex < GitTag.Length; GitVersionCharIndex++)
+			{
+				if ( '9' >= GitTag[GitVersionCharIndex] && GitTag[GitVersionCharIndex] >= '0')
+				{
+					GitVersion += GitTag[GitVersionCharIndex];
+					GitVersionPatch += GitTag[GitVersionCharIndex];
+				}
+				else
+				{
+					GitVersionCharIndex++;
+					break;
+				}
+			}
 		}
 		else
 			RunGitCommandHasError = true;
